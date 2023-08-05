@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech Input Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Speech Input Example</h1>
+    <p>Click the button and start speaking.</p>
+    
+    <form action="/getAudio" method="POST">
+        <input type="text" id="speechInput" placeholder="Speak here..." name="text" />
+        <p onclick="startSpeechRecognition()">Start</button>
+        <input type="submit" value="Submit">
+    </form>
+    {% if output %}
+        <center><h1>{{ output }}</h1></center>
+    {% endif %}
+    <script>
+        function startSpeechRecognition() {
+            const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+            recognition.lang = 'en-US'; // Set the language for speech recognition (e.g., 'en-US', 'en-GB', 'es-ES', etc.)
+
+            recognition.onresult = function(event) {
+                const result = event.results[0][0].transcript;
+                document.getElementById('speechInput').value = result;
+            }
+
+            recognition.onerror = function(event) {
+                console.error('Error occurred in speech recognition: ', event.error);
+            }
+
+            recognition.onend = function() {
+                console.log('Speech recognition ended.');
+            }
+
+            recognition.start();
+        }
+    </script>
+</body>
+</html>
